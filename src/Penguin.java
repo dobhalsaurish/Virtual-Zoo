@@ -1,4 +1,7 @@
-public class Penguin extends Animal implements Walk,Swim{
+import java.io.Serializable;
+
+public class Penguin extends Animal implements Walk,Swim,Serializable{
+    private static final long serialVersionUID = 1L;
 
     private boolean isSwimming;
     private int walkSpeed;
@@ -30,6 +33,19 @@ public class Penguin extends Animal implements Walk,Swim{
 
     public void setSwimSpeed(int swimSpeed) {
         this.swimSpeed = swimSpeed;
+    }
+
+    @Override
+    public String toString() {
+        return "Penguin{" +
+                "nameOfAnimal='" + getNameOfAnimal() + '\'' +
+                ", weight=" + getWeight() +
+                ", height=" + getHeight() +
+                ", age=" + getAge() +
+                ", isSwimming=" + isSwimming +
+                ", walkSpeed=" + walkSpeed +
+                ", swimSpeed=" + swimSpeed +
+                '}';
     }
 
     @Override

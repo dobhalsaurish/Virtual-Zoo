@@ -1,4 +1,7 @@
-public class Dolphin extends Animal implements Swim{
+import java.io.Serializable;
+
+public class Dolphin extends Animal implements Swim,Serializable{
+    private static final long serialVersionUID = 1L;
 
     private int swimmingSpeed;
     private String colorOfDolphin;
@@ -21,6 +24,18 @@ public class Dolphin extends Animal implements Swim{
 
     public void setColorOfDolphin(String colorOfDolphin) {
         this.colorOfDolphin = colorOfDolphin;
+    }
+
+    @Override
+    public String toString() {
+        return "Dolphin{" +
+                "nameOfAnimal='" + getNameOfAnimal() + '\'' +
+                ", weight=" + getWeight() +
+                ", height=" + getHeight() +
+                ", age=" + getAge() +
+                ", swimmingSpeed=" + swimmingSpeed +
+                ", colorOfDolphin='" + colorOfDolphin + '\'' +
+                '}';
     }
 
     @Override

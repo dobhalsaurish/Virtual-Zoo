@@ -1,4 +1,6 @@
+//import java.awt.*;
 import java.util.Scanner;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,7 +64,7 @@ public class Main {
                     break;
                 case 2:
                     do {
-                        System.out.println("The animal which is chosen is : ");
+                        System.out.println("The animal which is chosen is : " + dolphinObject.getNameOfAnimal());
                         // get menu choice
                         menuChoice=animalDetailsManipulationMenu(keyboard,dolphinObject);
                         switch (menuChoice) {
@@ -105,7 +107,7 @@ public class Main {
                 case 3:
 
                     System.out.println("The animal which is chosen is : "+penguinObject.getNameOfAnimal());
-                    System.out.println("Is pengiun walking or swimming? (true/false):");
+                    System.out.println("Is penguin walking or swimming? (true/false):");
                     penguinObject.setSwimming(keyboard.nextBoolean());
                     do {
                         //System.out.println("The animal which is chosen is : "+penguinObject.getNameOfAnimal());
@@ -160,6 +162,18 @@ public class Main {
 
                     break;
 
+                case 4:
+                    System.out.println("\n========== SAVING ALL ANIMALS TO FILES ==========");
+                    writeObjectsToFile(tigerObject, dolphinObject, penguinObject);
+                    System.out.println("========== SAVE COMPLETE ==========");
+                    break;
+
+                case 5:
+                    System.out.println("\n========== READING ALL ANIMALS FROM FILES ==========");
+                    readObjectFromFile();
+                    System.out.println("========== READ COMPLETE ==========");
+                    break;
+
                 default:
                     System.out.println("Sorry no such animal available.");
             }
@@ -178,8 +192,10 @@ public class Main {
         System.out.println("1. Tiger");
         System.out.println("2. Dolphin");
         System.out.println("3. Penguin");
+        System.out.println("4. Save all animals to files");
+        System.out.println("5. Read all animals from files");
 
-        System.out.println("Enter choice of animal (1-3):");
+        System.out.println("Enter choice of animal (1-5):");
         choiceGivenByUser = keyboard.nextInt();
         return choiceGivenByUser;
     }
@@ -198,6 +214,207 @@ public class Main {
         return choiceGivenByUser;
 
     }
+
+    public static void writeObjectsToFile (Tiger tiger, Dolphin dolphin, Penguin penguin) {
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("tiger.txt"))) {
+            oos.writeObject(tiger);
+            System.out.println("Tiger Object successfully saved to tiger.txt");
+        } catch (IOException e) {
+            System.out.println("Error saving Tiger: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("penguin.txt"))) {
+            oos.writeObject(penguin);
+            System.out.println("Penguin Object saved to penguin.txt");
+        } catch (IOException e) {
+            System.out.println("Error saving Penguin: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("dolphin.txt"))) {
+            oos.writeObject(dolphin);
+            System.out.println("Dolphin Object saved to dolphin.txt");
+        } catch (IOException e) {
+            System.out.println("Error saving Dolphin: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void readObjectFromFile() {
+        System.out.println("\n============ READING SAVED ANIMALS FROM FILES ============");
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("tiger.txt"))) {
+            Tiger readTiger = (Tiger) ois.readObject();
+            System.out.println("\n--- Tiger (from tiger.txt) ---");
+            System.out.println(readTiger.toString());
+            System.out.println("Movement: ");
+            readTiger.walking();
+            System.out.println("Eating: ");
+            readTiger.eatingFood();
+            readTiger.eatingCompleted();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: tiger.txt file not found. Please save the animals first.");
+        } catch (IOException e) {
+            System.err.println("Error reading Tiger file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: Tiger class not found during deserialization");
+            e.printStackTrace();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("penguin.txt"))) {
+            Penguin readPenguin = (Penguin) ois.readObject();
+            System.out.println("\n--- Penguin (from penguin.txt) ---");
+            System.out.println(readPenguin.toString());
+            System.out.println("Movement: ");
+            if (readPenguin.isSwimming()) {
+                readPenguin.swimming();
+            } else {
+                readPenguin.walking();
+            }
+            System.out.println("Eating: ");
+            readPenguin.eatingFood();
+            readPenguin.eatingCompleted();
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: penguin.txt file not found. Please save the animals first.");
+        } catch (IOException e) {
+            System.err.println("Error reading Penguin file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: Penguin class not found during deserialization");
+            e.printStackTrace();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("dolphin.txt"))) {
+            Dolphin readDolphin = (Dolphin) ois.readObject();
+            System.out.println("\n--- Dolphin (from dolphin.txt) ---");
+            System.out.println(readDolphin.toString());
+            System.out.println("Movement: ");
+            readDolphin.swimming();
+            System.out.println("Eating: ");
+            readDolphin.eatingFood();
+            readDolphin.eatingCompleted();
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: penguin.txt file not found. Please save the animals first.");
+        } catch (IOException e) {
+            System.err.println("Error reading Penguin file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: Penguin class not found during deserialization");
+            e.printStackTrace();
+        }
+
+        System.out.println("\n======== FINISHED READING ANIMALS ========");
+    }
+
+//    public static void readObjectsFromFile() {
+//        System.out.println("\n============ READING SAVED ANIMALS FROM FILES ============");
+//
+//        // TODO 4.a: Read the file tiger.txt, penguin.txt and dolphin.txt
+//        // TODO 4.b: Print the save state of Tiger from the file tiger.txt
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("tiger.txt"))) {
+//            Tiger readTiger = (Tiger) ois.readObject();
+//            System.out.println("\n--- Tiger (from tiger.txt) ---");
+//            System.out.println(readTiger.toString());
+//            System.out.println("Movement: ");
+//            readTiger.walking();
+//            System.out.println("Eating: ");
+//            readTiger.eatingFood();
+//            readTiger.eatingCompleted();
+//        } catch (FileNotFoundException e) {
+//            System.out.println("\n--- Tiger (from tiger.txt) ---");
+//            System.out.println("Error: tiger.txt file not found. Please save the animals first (Option 4).");
+//        } catch (IOException e) {
+//            System.out.println("\n--- Tiger (from tiger.txt) ---");
+//            System.out.println("Error reading Tiger file: " + e.getMessage());
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("\n--- Tiger (from tiger.txt) ---");
+//            System.out.println("Error: Tiger class not found during deserialization");
+//        }
+//
+//        // TODO 4.c: Print the save state of Penguin from the file penguin.txt
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("penguin.txt"))) {
+//            Penguin readPenguin = (Penguin) ois.readObject();
+//            System.out.println("\n--- Penguin (from penguin.txt) ---");
+//            System.out.println(readPenguin.toString());
+//            System.out.println("Movement: ");
+//            if (readPenguin.isSwimming()) {
+//                readPenguin.swimming();
+//            } else {
+//                readPenguin.walking();
+//            }
+//            System.out.println("Eating: ");
+//            readPenguin.eatingFood();
+//            readPenguin.eatingCompleted();
+//        } catch (FileNotFoundException e) {
+//            System.out.println("\n--- Penguin (from penguin.txt) ---");
+//            System.out.println("Error: penguin.txt file not found. Please save the animals first (Option 4).");
+//        } catch (IOException e) {
+//            System.out.println("\n--- Penguin (from penguin.txt) ---");
+//            System.out.println("Error reading Penguin file: " + e.getMessage());
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("\n--- Penguin (from penguin.txt) ---");
+//            System.out.println("Error: Penguin class not found during deserialization");
+//        }
+//
+//        // TODO 4.d: Print the save state of Dolphin from the file dolphin.txt
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("dolphin.txt"))) {
+//            Dolphin readDolphin = (Dolphin) ois.readObject();
+//            System.out.println("\n--- Dolphin (from dolphin.txt) ---");
+//            System.out.println(readDolphin.toString());
+//            System.out.println("Movement: ");
+//            readDolphin.swimming();
+//            System.out.println("Eating: ");
+//            readDolphin.eatingFood();
+//            readDolphin.eatingCompleted();
+//        } catch (FileNotFoundException e) {
+//            System.out.println("\n--- Dolphin (from dolphin.txt) ---");
+//            System.out.println("Error: dolphin.txt file not found. Please save the animals first (Option 4).");
+//        } catch (IOException e) {
+//            System.out.println("\n--- Dolphin (from dolphin.txt) ---");
+//            System.out.println("Error reading Dolphin file: " + e.getMessage());
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("\n--- Dolphin (from dolphin.txt) ---");
+//            System.out.println("Error: Dolphin class not found during deserialization");
+//        }
+//
+//        System.out.println("\n======== FINISHED READING ANIMALS ========");
+//    }
+//
+//    public static void writeObjectsToFile(Tiger tiger, Penguin penguin, Dolphin dolphin) {
+//        System.out.println("\n========== SAVING ANIMALS TO FILES ==========");
+//
+//        // TODO 3.a: Save the state of Tiger to output tiger.txt file
+//        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("tiger.txt"))) {
+//            oos.writeObject(tiger);
+//            System.out.println("✓ Tiger saved successfully to tiger.txt");
+//            System.out.println("  Saved: " + tiger.toString());
+//        } catch (IOException e) {
+//            System.out.println("✗ Error saving Tiger: " + e.getMessage());
+//        }
+//
+//        // TODO 3.b: Save the state of Penguin to output penguin.txt file
+//        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("penguin.txt"))) {
+//            oos.writeObject(penguin);
+//            System.out.println("✓ Penguin saved successfully to penguin.txt");
+//            System.out.println("  Saved: " + penguin.toString());
+//        } catch (IOException e) {
+//            System.out.println("✗ Error saving Penguin: " + e.getMessage());
+//        }
+//
+//        // TODO 3.c: Save the state of Dolphin to output dolphin.txt file
+//        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("dolphin.txt"))) {
+//            oos.writeObject(dolphin);
+//            System.out.println("✓ Dolphin saved successfully to dolphin.txt");
+//            System.out.println("  Saved: " + dolphin.toString());
+//        } catch (IOException e) {
+//            System.out.println("✗ Error saving Dolphin: " + e.getMessage());
+//        }
+//
+//        System.out.println("========== SAVE COMPLETE ==========\n");
+//    }
 }
 
 

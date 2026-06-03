@@ -1,5 +1,7 @@
-public class Tiger extends Animal implements Walk{
+import java.io.Serializable;
 
+public class Tiger extends Animal implements Walk,Serializable{
+    private static final long serialVersionUID = 1L;
     private int numberOfStripes;
     private int speed;
     private int levelOfRoar;
@@ -30,6 +32,19 @@ public class Tiger extends Animal implements Walk{
 
     public void setLevelOfRoar(int levelOfRoar) {
         this.levelOfRoar = levelOfRoar;
+    }
+
+    @Override
+    public String toString() {
+        return "Tiger{" +
+                "nameOfAnimal='" + getNameOfAnimal() + '\'' +
+                ", weight=" + getWeight() +
+                ", height=" + getHeight() +
+                ", age=" + getAge() +
+                ", numberOfStripes=" + numberOfStripes +
+                ", speed=" + speed +
+                ", levelOfRoar=" + levelOfRoar +
+                '}';
     }
 
     @Override
